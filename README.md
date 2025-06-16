@@ -12,7 +12,7 @@ PadAutomation is a web automation testing project using Java, Selenium WebDriver
 
 ```
 src/
- ├── main/java/Pages/                # Page Object classes
+ ├── main/java/pages/                # Page Object classes
  ├── test/java/runners/              # Cucumber test runners
  ├── test/java/stepsDefinition/      # Cucumber step definitions
  ├── test/java/utils/                # Utilities (ExtentReport, Screenshot, etc)

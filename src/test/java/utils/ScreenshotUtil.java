@@ -4,24 +4,26 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 public class ScreenshotUtil {
 
-    public static String takeScreenshot(WebDriver driver, String name) {
-        TakesScreenshot ts = (TakesScreenshot) driver;
-        File source = ts.getScreenshotAs(OutputType.FILE);
-        String destination = System.getProperty("user.dir") + "/screenshots/" + name + ".png";
-        try {
-            // Membuat direktori jika belum ada
-            Files.createDirectories(Paths.get(System.getProperty("user.dir") + "/screenshots/"));
-            Files.copy(source.toPath(), Paths.get(destination));
-        } catch (IOException e) {
-            e.printStackTrace();
+    /**
+     * Mengambil screenshot dari halaman saat ini dan mengembalikannya
+     * sebagai string yang di-encode dengan Base64.
+     *
+     * @param driver WebDriver instance yang sedang berjalan.
+     * @return String Base64 dari gambar screenshot.
+     */
+    public static String takeScreenshotAsBase64(WebDriver driver) {
+        if (driver == null) {
+            System.err.println("WebDriver is null, cannot take screenshot.");
+            return null;
         }
-        return destination;
+        try {
+            // Langsung ambil screenshot sebagai Base64
+            return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BASE64);
+        } catch (Exception e) {
+            System.err.println("Failed to take screenshot as Base64: " + e.getMessage());
+            return null;
+        }
     }
 }
