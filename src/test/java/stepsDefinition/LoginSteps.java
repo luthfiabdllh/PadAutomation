@@ -36,16 +36,10 @@ public class LoginSteps {
         testContext.getTest().info("Entered password.");
     }
 
-    @And("the user clicks the {string} button")
-    public void theUserClicksTheButton(String buttonName) {
-        // Logika ini bisa diperluas jika ada tombol lain, tapi untuk sekarang langsung ke login
-        if (buttonName.equalsIgnoreCase("Login")) {
-            loginPage.clickLoginButton();
-            testContext.getTest().info("Clicked the Login button.");
-        } else {
-            // Bisa ditambahkan error handling jika tombol lain disebut
-            throw new IllegalArgumentException(buttonName + " button is not defined in this step.");
-        }
+    @And("the user clicks the Login button")
+    public void theUserClicksTheLoginButton() {
+        loginPage.clickLoginButton();
+        testContext.getTest().info("Clicked the Login button.");
     }
 
     @Then("the user is successfully logged in and redirected to the account page")
