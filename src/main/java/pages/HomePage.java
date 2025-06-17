@@ -103,7 +103,7 @@ public class HomePage {
 
         // Ambil produk pertama dari slide aktif
         wait.until(ExpectedConditions.visibilityOfAllElements(activeProductList));
-        WebElement firstProduct = activeProductList.get(0);
+        WebElement firstProduct = activeProductList.get(5);
 
         // Gulir ke elemen produk untuk memastikan terlihat
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", firstProduct);

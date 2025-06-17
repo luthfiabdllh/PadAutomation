@@ -185,43 +185,52 @@ public class CheckoutSteps {
         driver.quit();
     }
 
+    @When("the user enters address details with empty first and last name")
+    public void userEntersValidAddressDetailsWithEmptyFirstAndLast(DataTable dataTable) {
+        checkoutPage.clickNewAddressRadio();
+        List<Map<String, String>> addressData = dataTable.asMaps();
+        Map<String, String> address = addressData.get(0);
+        checkoutPage.enterAddressDetails(
+                address.get("FirstName"),
+                address.get("LastName"),
+                address.get("Address"),
+                address.get("City"),
+                address.get("PostCode"),
+                address.get("Country"),
+                address.get("Region")
+        );
+        test.info("Entered valid address details: " + address);
+    }
 
-//
-//
-//    @When("the user enters address details with empty address")
-//    public void userEntersAddressDetailsWithEmptyAddress(DataTable dataTable) {
-//        List<Map<String, String>> addressData = dataTable.asMaps();
-//        Map<String, String> address = addressData.get(0);
-//        checkoutPage.enterAddressDetails(
-//                address.get("FirstName"),
-//                address.get("LastName"),
-//                "",
-//                address.get("City"),
-//                address.get("PostCode"),
-//                address.get("Country"),
-//                address.get("Region")
-//        );
-//        test.info("Entered address details with empty address: " + address);
-//    }
-//
-//    @When("the user enters address details with invalid postcode")
-//    public void userEntersAddressDetailsWithInvalidPostcode(DataTable dataTable) {
-//        List<Map<String, String>> addressData = dataTable.asMaps();
-//        Map<String, String> address = addressData.get(0);
-//        checkoutPage.enterAddressDetails(
-//                address.get("FirstName"),
-//                address.get("LastName"),
-//                address.get("Address"),
-//                address.get("City"),
-//                address.get("PostCode"),
-//                address.get("Country"),
-//                address.get("Region")
-//        );
-//        test.info("Entered address details with invalid postcode: " + address);
-//    }
+    @Then("the user should see an error message \"Warning: you must agree to Terms & Conditions\"")
+    public void userShouldSeeErrorMessage4(String expectedError) {
+        String actualError = checkoutPage.getErrorMessage();
+        if (actualError.contains(expectedError)) {
+            test.pass("Error message displayed as expected: " + actualError);
+        } else {
+            test.fail("Expected error message: " + expectedError + ", but got: " + actualError);
+        }
+        Assert.assertTrue(actualError.contains(expectedError));
+        driver.quit();
+    }
 
 
-
-//
+    @And("the user don't click \"{string}\"")
+    public void userDontClickTermsConditions(String terms) {
+        if (terms.equals("I have read and agree to Terms & Conditions")) {
+            test.info("Clicked " + terms);
+        }
+    }
+    @Then("the user should see an error message \"Warning: you must agree to Terms & Conditions\"")
+    public void userShouldSeeErrorMessage5(String expectedError) {
+        String actualError = checkoutPage.getErrorMessage();
+        if (actualError.contains(expectedError)) {
+            test.pass("Error message displayed as expected: " + actualError);
+        } else {
+            test.fail("Expected error message: " + expectedError + ", but got: " + actualError);
+        }
+        Assert.assertTrue(actualError.contains(expectedError));
+        driver.quit();
+    }
 
 }
