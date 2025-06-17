@@ -16,7 +16,7 @@ public class ExtendReportManager3 {
             extent.attachReporter(sparkReporter);
             extent.setSystemInfo("OS", System.getProperty("os.name"));
             extent.setSystemInfo("Browser", "Chrome");
-            extent.setSystemInfo("QA", "Nafa");
+            extent.setSystemInfo("QA", "Wahhab & Luthfi");
             extent.setSystemInfo("Environment", "Staging");
         }
         return extent;

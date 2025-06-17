@@ -46,6 +46,10 @@ Test reports can be found at:
 - `test-output/ExtentReport.html`
 - `target/cucumber-report.html`
 
+## Documentation
+Test Suite Documentation can be found at:
+- `Kelompok 21 2025 - Test Suite & Test Case utk automation & manual.pdf`
+
 ## Contribution
 
 1. Fork this repository
