@@ -31,7 +31,7 @@ public class ExtentReportManager {
         // Mengkonfigurasi tampilan report (Spark Reporter)
         ExtentSparkReporter sparkReporter = new ExtentSparkReporter(reportPath);
         sparkReporter.config().setDocumentTitle("Automation Test Report");
-        sparkReporter.config().setReportName("LSP UGM Test Results");
+        sparkReporter.config().setReportName("Test Results");
         sparkReporter.config().setTheme(Theme.STANDARD);
         sparkReporter.config().setEncoding("utf-8");
 
@@ -42,7 +42,7 @@ public class ExtentReportManager {
         // Menambahkan informasi sistem ke dalam report
         extent.setSystemInfo("OS", System.getProperty("os.name"));
         extent.setSystemInfo("Browser", "Chrome");
-        extent.setSystemInfo("QA", "Olaf"); // Ganti dengan nama Anda
+        extent.setSystemInfo("QA", "Wahhab & Luthfi");
         extent.setSystemInfo("Environment", "Staging");
     }
 
