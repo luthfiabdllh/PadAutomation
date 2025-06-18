@@ -1,4 +1,4 @@
-Feature: Checkout Functionality
+ Feature: Checkout Functionality
   As a logged-in user of the e-commerce playground
   I want to complete the checkout process
   So that I can place an order successfully
@@ -45,6 +45,6 @@ Feature: Checkout Functionality
      When the user enters valid address details
        | FirstName | LastName | Address         | City       | PostCode | Country   | Region     |
        | Wahhab    | Awaludin | 123 Yogyakarta  | Yogyakarta | 10001    | Indonesia | Yogyakarta |
-     and the user don't click "I have read and agree to Terms & Conditions"
+     And the user don't click "I have read and agree to Terms & Conditions"
      And the user clicks continue button
      Then the user should see an error message "Warning: you must agree to Terms & Conditions"

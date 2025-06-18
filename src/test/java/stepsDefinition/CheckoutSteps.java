@@ -118,10 +118,13 @@ public class CheckoutSteps {
         checkoutPage.clickNewAddressRadio();
         List<Map<String, String>> addressData = dataTable.asMaps();
         Map<String, String> address = addressData.get(0);
+
+        String safeAddress = address.get("Address") == null ? "" : address.get("Address");
+
         checkoutPage.enterAddressDetails(
                 address.get("FirstName"),
                 address.get("LastName"),
-                address.get("Address"),
+                safeAddress,
                 address.get("City"),
                 address.get("PostCode"),
                 address.get("Country"),
@@ -130,7 +133,7 @@ public class CheckoutSteps {
         test.info("Entered valid address details: " + address);
     }
 
-    @Then("the user should see an error message 'Address 1 must be between 3 and 128 characters!'")
+    @Then("the user should see an error message {string}")
     public void userShouldSeeErrorMessage(String expectedError) {
         String actualError = checkoutPage.getErrorMessage();
         if (actualError.contains(expectedError)) {
@@ -139,7 +142,6 @@ public class CheckoutSteps {
             test.fail("Expected error message: " + expectedError + ", but got: " + actualError);
         }
         Assert.assertTrue(actualError.contains(expectedError));
-        driver.quit();
     }
 
 
@@ -202,17 +204,6 @@ public class CheckoutSteps {
         test.info("Entered valid address details: " + address);
     }
 
-    @Then("the user should see an error message \"Warning: you must agree to Terms & Conditions\"")
-    public void userShouldSeeErrorMessage4(String expectedError) {
-        String actualError = checkoutPage.getErrorMessage();
-        if (actualError.contains(expectedError)) {
-            test.pass("Error message displayed as expected: " + actualError);
-        } else {
-            test.fail("Expected error message: " + expectedError + ", but got: " + actualError);
-        }
-        Assert.assertTrue(actualError.contains(expectedError));
-        driver.quit();
-    }
 
 
     @And("the user don't click \"{string}\"")
@@ -220,17 +211,6 @@ public class CheckoutSteps {
         if (terms.equals("I have read and agree to Terms & Conditions")) {
             test.info("Clicked " + terms);
         }
-    }
-    @Then("the user should see an error message \"Warning: you must agree to Terms & Conditions\"")
-    public void userShouldSeeErrorMessage5(String expectedError) {
-        String actualError = checkoutPage.getErrorMessage();
-        if (actualError.contains(expectedError)) {
-            test.pass("Error message displayed as expected: " + actualError);
-        } else {
-            test.fail("Expected error message: " + expectedError + ", but got: " + actualError);
-        }
-        Assert.assertTrue(actualError.contains(expectedError));
-        driver.quit();
     }
 
 }

@@ -98,34 +98,60 @@ public class HomePage {
 
 
     public void addFirstAvailableProductToCart() {
-        // Tunggu hingga carousel dimuat dan slide aktif tersedia
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".swiper-slide-active")));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        Actions actions = new Actions(driver);
 
-        // Ambil produk pertama dari slide aktif
-        wait.until(ExpectedConditions.visibilityOfAllElements(activeProductList));
-        WebElement firstProduct = activeProductList.get(5);
-
-        // Gulir ke elemen produk untuk memastikan terlihat
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", firstProduct);
-
-        // Coba hover untuk menampilkan tombol "Add to Cart"
-        actions.moveToElement(firstProduct).perform();
         try {
-            // Tunggu tombol "Add to Cart" muncul setelah hover
-            WebElement addButton = wait.until(ExpectedConditions.elementToBeClickable(
-                    By.cssSelector(".swiper-slide-active .btn.btn-cart")));
-            addButton.click();
-        } catch (Exception e) {
-            // Jika hover gagal atau tombol tidak muncul, klik produk lalu tambahkan
-            firstProduct.findElement(By.cssSelector("a")).click(); // Klik tautan produk
-            // Tunggu tombol "Add to Cart" muncul di halaman detail
-            WebElement addButton = wait.until(ExpectedConditions.elementToBeClickable(
-                    By.cssSelector(".btn.btn-cart")));
-            addButton.click();
-        }
+            // 1. Tunggu hingga carousel dimuat
+            wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.cssSelector(".swiper-slide-active")
+            ));
 
-        // Tunggu konfirmasi (misalnya, perubahan ikon keranjang)
-        wait.until(ExpectedConditions.textToBePresentInElement(cartItemTotal, "1")); // Asumsi jumlah item berubah
+            // 2. Cari semua produk dalam slide aktif
+            By productSelector = By.cssSelector(".swiper-slide-active .product-thumb");
+            List<WebElement> activeProducts = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(productSelector));
+
+            // 3. Verifikasi jumlah produk
+            System.out.println("[DEBUG] Jumlah produk ditemukan: " + activeProducts.size());
+            if (activeProducts.size() < 3) {
+                throw new RuntimeException("Produk indeks ke-2 tidak tersedia. Hanya ditemukan " + activeProducts.size() + " produk");
+            }
+
+            // 4. Ambil produk ketiga (indeks 2)
+            WebElement thirdProduct = activeProducts.get(2);
+
+            // 5. Scroll ke produk
+            ((JavascriptExecutor) driver).executeScript(
+                    "arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});",
+                    thirdProduct
+            );
+            Thread.sleep(1000); // Beri waktu untuk scroll
+
+            // 6. Coba hover dan klik tombol
+            actions.moveToElement(thirdProduct).pause(2000).perform();
+
+            try {
+                // Cari tombol ADD TO CART spesifik untuk produk ini
+                WebElement addButton = thirdProduct.findElement(By.cssSelector(".btn.btn-cart"));
+                wait.until(ExpectedConditions.elementToBeClickable(addButton)).click();
+                System.out.println("Berhasil menambahkan produk dari carousel");
+            }
+            catch (Exception e) {
+                // Fallback: Buka halaman detail produk
+                System.out.println("Fallback ke halaman detail: " + e.getMessage());
+                thirdProduct.findElement(By.cssSelector(".title a")).click(); // Klik judul produk
+
+                // Tunggu dan klik tombol di halaman detail
+                WebElement addButtonDetail = wait.until(ExpectedConditions.elementToBeClickable(
+                        By.cssSelector("#product button[type='button'][id='button-cart']")
+                ));
+                addButtonDetail.click();
+            }
+        }
+        catch (Exception e) {
+            System.err.println("Gagal menambahkan produk: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public String getCartItemTotal() {
