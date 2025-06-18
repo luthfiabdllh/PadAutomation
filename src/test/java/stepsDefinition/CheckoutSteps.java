@@ -135,13 +135,22 @@ public class CheckoutSteps {
 
     @Then("the user should see an error message {string}")
     public void userShouldSeeErrorMessage(String expectedError) {
-        String actualError = checkoutPage.getErrorMessage();
-        if (actualError.contains(expectedError)) {
-            test.pass("Error message displayed as expected: " + actualError);
-        } else {
-            test.fail("Expected error message: " + expectedError + ", but got: " + actualError);
+        List<String> actualMessages = checkoutPage.getErrorMessages();
+
+        // Debug: tampilkan semua pesan error yang ditemukan
+        System.out.println("Actual error messages: " + actualMessages);
+
+        // Verifikasi salah satu pesan mengandung teks yang diharapkan
+        boolean found = false;
+        for (String message : actualMessages) {
+            if (message.contains(expectedError)) {
+                found = true;
+                break;
+            }
         }
-        Assert.assertTrue(actualError.contains(expectedError));
+
+        Assert.assertTrue("Expected error message not found: " + expectedError +
+                        "\nActual messages: " + actualMessages, found);
     }
 
 
@@ -192,9 +201,13 @@ public class CheckoutSteps {
         checkoutPage.clickNewAddressRadio();
         List<Map<String, String>> addressData = dataTable.asMaps();
         Map<String, String> address = addressData.get(0);
+
+        String safeFirstname = address.get("FirstName") == null ? "" : address.get("FirstName");
+        String safeLastName = address.get("LastName") == null ? "" : address.get("LastName");
+
         checkoutPage.enterAddressDetails(
-                address.get("FirstName"),
-                address.get("LastName"),
+                safeFirstname,
+                safeLastName,
                 address.get("Address"),
                 address.get("City"),
                 address.get("PostCode"),
@@ -206,7 +219,7 @@ public class CheckoutSteps {
 
 
 
-    @And("the user don't click \"{string}\"")
+    @And("the user don't click {string}")
     public void userDontClickTermsConditions(String terms) {
         if (terms.equals("I have read and agree to Terms & Conditions")) {
             test.info("Clicked " + terms);

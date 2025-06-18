@@ -8,6 +8,8 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CheckoutPage {
     private WebDriver driver;
@@ -52,7 +54,10 @@ public class CheckoutPage {
     @FindBy(id = "input-payment-address-new")
     private WebElement chooiseAddress;
 
-    @FindBy(css = ".alert.alert-danger.alert-dismissible")
+    @FindBy(css = ".invalid-feedback.d-block")
+    private List<WebElement> invalidFeedbackErrors;
+
+    @FindBy(css = ".alert.alert-warning.alert-dismissible")
     private WebElement errorMessage;
 
     public CheckoutPage(WebDriver driver) {
@@ -136,8 +141,41 @@ public class CheckoutPage {
     public void clickContinueButton() {
         continueButton.click();
     }
-    public String getErrorMessage() {
-        return errorMessage.isDisplayed() ? errorMessage.getText() : "";
+    public List<String> getErrorMessages() {
+        List<String> errorMessages = new ArrayList<>();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        try {
+            // Tunggu sampai pesan error muncul
+            wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.cssSelector(".invalid-feedback.d-block, .alert.alert-warning")
+            ));
+
+            // Kumpulkan semua pesan error dari invalid-feedback
+            for (WebElement error : invalidFeedbackErrors) {
+                if (error.isDisplayed()) {
+                    errorMessages.add(error.getText().trim());
+                }
+            }
+
+            // Tambahkan pesan warning jika ada
+            if (errorMessage.isDisplayed()) {
+                errorMessages.add(errorMessage.getText().replace("×", "").trim());
+            }
+        } catch (TimeoutException e) {
+            // Tidak ada error message yang muncul
+        }
+        return errorMessages;
+    }
+
+    public boolean isErrorMessageDisplayed(String expectedMessage) {
+        List<String> actualMessages = getErrorMessages();
+        for (String message : actualMessages) {
+            if (message.contains(expectedMessage)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public String getCurrentUrl() {

@@ -24,7 +24,7 @@
      And the user is on the checkout page
      When the user enters address details with empty address
        | FirstName | LastName | Address | City     | PostCode | Country       | Region   |
-       | John      | Doe      |         | New York | 10001    | United States | New York |
+       | Wahhab    | Awaludin |         | Yogyakarta | 10001    | Indonesia | Yogyakarta |
      And the user clicks "I have read and agree to Terms & Conditions"
      And the user clicks continue button
      Then the user should see an error message "Address 1 must be between 3 and 128 characters!"
